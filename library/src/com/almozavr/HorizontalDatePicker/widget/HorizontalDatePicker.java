@@ -372,7 +372,7 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
     }
 
     private DateChangeListener dateChangeListener;
-    private boolean enableDateChangeListener;
+    private boolean enableDateChangeListener = true;
 
     public void setDateChangeListener(DateChangeListener listener) {
         dateChangeListener = listener;
