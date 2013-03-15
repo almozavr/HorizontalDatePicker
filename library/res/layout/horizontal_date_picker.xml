@@ -12,7 +12,6 @@
         android:id="@+id/horizontal_date_picker_month"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:background="#0aa1ee"
         />
 
     <it.sephiroth.android.library.widget.HorizontalVariableListView
