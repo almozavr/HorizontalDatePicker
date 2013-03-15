@@ -173,13 +173,13 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
     }
 
     private void initAdapters() {
-        yearAdapter = new YearRangeAdapter(getContext(), R.layout.horizontal_date_picker_value_item);
+        yearAdapter = new YearRangeAdapter(getContext(), yearItemRes);
         monthAdapter = new MonthRangeAdapter(getContext(),
-                R.layout.horizontal_date_picker_abbr_item,
+                monthItemRes,
                 abbreviations.contains(Abbreviation.MONTH),
                 values.contains(Value.MONTH));
         dayAdapter = new DayRangeAdapter(getContext(),
-                R.layout.horizontal_date_picker_abbr_item,
+                dayItemRes,
                 abbreviations.contains(Abbreviation.DAY),
                 values.contains(Value.DAY));
     }
