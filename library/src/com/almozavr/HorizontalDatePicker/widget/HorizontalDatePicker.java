@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -250,7 +252,7 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
     @Override
     public void setDateRange(long startDate, long endDate) {
         if (startDate > endDate)
-            throw new IllegalArgumentException("You end before you start, no good");
+            throw new IllegalArgumentException("You finish before you start, no good");
 
         rangeStartDate = startDate;
         rangeEndDate = endDate;
@@ -279,7 +281,7 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
         setMonthRagne(startYear);
     }
 
-    private void setMonthRagne(int year) {
+    private int setMonthRagne(int year) {
         monthStart = Calendar.JANUARY;
         monthEnd = Calendar.DECEMBER;
 
@@ -303,9 +305,11 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
 
         setDayRange(year, monthStart);
 
+        return monthStart;
+
     }
 
-    private void setDayRange(int year, int month) {
+    private int setDayRange(int year, int month) {
         dayStart = 0;
         dayEnd = 0;
 
@@ -338,8 +342,10 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
         sharedCalendar.set(Calendar.DAY_OF_MONTH, dayStart);
         selectedDate = sharedCalendar.getTimeInMillis();
 
-        if (dateChangeListener != null)
+        if (dateChangeListener != null && enableDateChangeListener)
             dateChangeListener.onDateChanged(selectedDate);
+
+        return dayStart;
     }
 
     @Override
@@ -347,9 +353,101 @@ public class HorizontalDatePicker extends LinearLayout implements DatePicker {
         return selectedDate;
     }
 
+    @Override
+    public void setSelectedDate(long dateInMillis) {
+        if (dateInMillis < rangeStartDate || dateInMillis > rangeEndDate)
+            return; // out of range, do nothing
+
+        sharedCalendar.setTimeInMillis(dateInMillis);
+        int year = sharedCalendar.get(Calendar.YEAR);
+        int month = sharedCalendar.get(Calendar.MONTH);
+        int day = sharedCalendar.get(Calendar.DAY_OF_MONTH);
+
+        yearPicker.setItemChecked(year - startYear, true);
+        int startMonth = setMonthRagne(year);
+        monthPicker.setItemChecked(month - startMonth, true);
+        int startDay = setDayRange(year, month);
+        dayPicker.setItemChecked(day - startDay, true);
+
+    }
+
     private DateChangeListener dateChangeListener;
+    private boolean enableDateChangeListener;
 
     public void setDateChangeListener(DateChangeListener listener) {
         dateChangeListener = listener;
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // LifeCycle
+    // /////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+
+        ss.rangeStartDate = this.rangeStartDate;
+        ss.rangeEndDate = this.rangeEndDate;
+        ss.selectedDate = this.selectedDate;
+
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+
+        this.rangeStartDate = ss.rangeStartDate;
+        this.rangeEndDate = ss.rangeEndDate;
+
+        this.enableDateChangeListener = false;
+        setDateRange(rangeStartDate, rangeEndDate);
+        this.selectedDate = ss.selectedDate;
+        setSelectedDate(ss.selectedDate);
+        this.enableDateChangeListener = true;
+    }
+
+    static class SavedState extends BaseSavedState {
+
+        private long rangeStartDate;
+        private long rangeEndDate;
+        private long selectedDate;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.rangeStartDate = in.readLong();
+            this.rangeEndDate = in.readLong();
+            this.selectedDate = in.readLong();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeLong(rangeStartDate);
+            out.writeLong(rangeEndDate);
+            out.writeLong(selectedDate);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

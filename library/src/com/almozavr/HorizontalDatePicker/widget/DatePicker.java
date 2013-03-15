@@ -9,6 +9,8 @@ public interface DatePicker {
 
     public long getSelectedDate();
 
+    public void setSelectedDate(long dateInMillis);
+
     public static interface DateChangeListener {
 
         public void onDateChanged(long selectedDate);
