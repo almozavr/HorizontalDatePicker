@@ -1,0 +1,3 @@
+[submodule "contrib/HorizontalVariableListView"]
+	path = contrib/HorizontalVariableListView
+	url = git@github.com:almozavr/HorizontalVariableListView.git
