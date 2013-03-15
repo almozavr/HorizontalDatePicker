@@ -21,7 +21,8 @@ out
 
 # local
 local.properties
-proguard.cfg
+proguard/
+*/proguard.cfg
 
 # log files
 log*.txt
@@ -32,9 +33,14 @@ log*.txt
 *.zip
 
 # eclipse
+*.classpath
+*.project
 *.metadata
 *.settings
 
 #idea
+*.iml
+*.ipr
+*.iws
 *.idea
 *.iml

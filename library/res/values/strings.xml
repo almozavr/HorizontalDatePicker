@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">HorizontalDatePicker</string>
+    <string name="date_item_value_mask">%02d</string>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HorizontalDatePicker">
+        <!--Pickers to show-->
+        <attr name="pickers">
+            <flag name="year" value="1"/>
+            <flag name="month" value="2"/>
+            <flag name="day" value="4"/>
+        </attr>
+        <!--Pickers options-->
+        <attr name="abbrs">
+            <flag name="month" value="1"/>
+            <flag name="day" value="2"/>
+        </attr>
+        <attr name="values">
+            <flag name="month" value="1"/>
+            <flag name="day" value="2"/>
+        </attr>
+        <!--Pickers items layouts-->
+        <attr name="year_item_layout" format="reference"/>
+        <attr name="month_item_layout" format="reference"/>
+        <attr name="day_item_layout" format="reference"/>
+        <!--Pickers backgrounds-->
+        <attr name="year_picker_background" format="reference|color"/>
+        <attr name="month_picker_background" format="reference|color"/>
+        <attr name="day_picker_background" format="reference|color"/>
+    </declare-styleable>
+</resources>
